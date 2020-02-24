@@ -6,12 +6,14 @@ import com.googlecode.lanterna.input.KeyStroke;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class Arena {
     private int width;
     private int height;
 
     private List<Wall> walls;
+    private List<Coin> coins;
 
     Hero hero;
 
@@ -21,6 +23,7 @@ public class Arena {
 
         hero = new Hero(10, 10);
         this.walls = createWalls();
+        this.coins = createCoins();
     }
 
     private List<Wall> createWalls() {
@@ -39,18 +42,37 @@ public class Arena {
         return walls;
     }
 
+    public void retrieveCoins(Position position) {
+        for (Coin coin : coins) {
+            if (coin.getPosition().equals(position)) {
+                coins.remove(coin);
+                break;
+            }
+        }
+    }
+
+    private List<Coin> createCoins() {
+        Random random = new Random();
+        ArrayList<Coin> coins = new ArrayList<>();
+        for (int i = 0; i < 5; i++)
+            coins.add(new Coin(random.nextInt(width - 2) + 1, random.nextInt(height - 2) + 1));
+        return coins;
+    }
+
     public void draw(TextGraphics graphics) {
-        graphics.setBackgroundColor(TextColor.Factory.fromString("#FFC0CB"));
+        graphics.setBackgroundColor(TextColor.Factory.fromString("#B97A57"));
         graphics.fillRectangle(new TerminalPosition(0, 0), new TerminalSize(width, height), ' ');
         hero.draw(graphics);
 
         for (Wall wall : walls)
             wall.draw(graphics);
+
+        for (Coin coin : coins)
+            coin.draw(graphics);
     }
 
     public void setPosition(Position position) {
-        if(canHeroMove(position))
-            hero.setPosition(position);
+        hero.setPosition(position);
     }
 
     private boolean canHeroMove(Position position) {
@@ -63,7 +85,10 @@ public class Arena {
     }
 
     private void moveHero(Position position) {
-        setPosition(position);
+        if(canHeroMove(position)) {
+            setPosition(position);
+            retrieveCoins(position);
+        }
     }
 
     public boolean processKey(KeyStroke key) {

@@ -9,8 +9,8 @@ public class Hero extends Element {
     }
 
     public void draw(TextGraphics graphics) {
-        graphics.setForegroundColor(TextColor.Factory.fromString("#FFFF33"));
+        graphics.setForegroundColor(TextColor.Factory.fromString("#0000AA"));
         graphics.enableModifiers(SGR.BOLD);
-        graphics.setCharacter(position.getX(), position.getY(), 'X');
+        graphics.setCharacter(position.getX(), position.getY(), 'H');
     }
 }
