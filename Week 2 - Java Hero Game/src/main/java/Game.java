@@ -1,6 +1,4 @@
-import com.googlecode.lanterna.TextCharacter;
 import com.googlecode.lanterna.input.KeyStroke;
-import com.googlecode.lanterna.input.KeyType;
 import com.googlecode.lanterna.screen.Screen;
 import com.googlecode.lanterna.screen.TerminalScreen;
 import com.googlecode.lanterna.terminal.DefaultTerminalFactory;
@@ -41,10 +39,6 @@ public class Game {
 
     private void processKey(KeyStroke key) {
         System.out.println(key);
-    }
-
-    private void moveHero(Position position) {
-        arena.setPosition(position);
     }
 
     public void run() throws IOException {

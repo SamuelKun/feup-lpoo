@@ -45,6 +45,14 @@ public class Arena {
         return walls;
     }
 
+    private List<Coin> createCoins() {
+        Random random = new Random();
+        ArrayList<Coin> coins = new ArrayList<>();
+        for (int i = 0; i < 5; i++)
+            coins.add(new Coin(random.nextInt(width - 2) + 1, random.nextInt(height - 2) + 1));
+        return coins;
+    }
+
     public void retrieveCoins(Position position) {
         for (Coin coin : coins) {
             if (coin.getPosition().equals(position)) {
@@ -54,20 +62,43 @@ public class Arena {
         }
     }
 
-    private List<Coin> createCoins() {
-        Random random = new Random();
-        ArrayList<Coin> coins = new ArrayList<>();
-        for (int i = 0; i < 5; i++)
-            coins.add(new Coin(random.nextInt(width - 2) + 1, random.nextInt(height - 2) + 1));
-        return coins;
-    }
-
     private List<Monster> createMonsters() {
         Random random = new Random();
         ArrayList<Monster> monsters = new ArrayList<>();
         for (int i = 0; i < 5; i++)
             monsters.add(new Monster(random.nextInt(width - 2) + 1, random.nextInt(height - 2) + 1));
         return monsters;
+    }
+
+    public void setPosition(Position position) {
+        hero.setPosition(position);
+    }
+
+    private boolean canHeroMove(Position position) {
+        for (Wall wall : walls) {
+            if (wall.getPosition().equals(position)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private boolean canMonsterMove(Position position) {
+        for (Wall wall : walls) {
+            if (wall.getPosition().equals(position)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private boolean verifyMonsterCollisions(Position position) {
+        for (Monster monster : monsters) {
+            if (monster.getPosition().equals(position)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private void moveMonsters() {
@@ -99,6 +130,14 @@ public class Arena {
         }
     }
 
+    private void moveHero(Position position) {
+        if(canHeroMove(position)) {
+            setPosition(position);
+            retrieveCoins(position);
+        }
+        moveMonsters();
+    }
+
     public void draw(TextGraphics graphics) {
         graphics.setBackgroundColor(TextColor.Factory.fromString("#B97A57"));
         graphics.fillRectangle(new TerminalPosition(0, 0), new TerminalSize(width, height), ' ');
@@ -112,36 +151,6 @@ public class Arena {
 
         for (Monster monster : monsters)
             monster.draw(graphics);
-    }
-
-    public void setPosition(Position position) {
-        hero.setPosition(position);
-    }
-
-    private boolean canHeroMove(Position position) {
-        for (Wall wall : walls) {
-            if (wall.getPosition().equals(position)) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    private boolean canMonsterMove(Position position) {
-        for (Wall wall : walls) {
-            if (wall.getPosition().equals(position)) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    private void moveHero(Position position) {
-        if(canHeroMove(position)) {
-            setPosition(position);
-            retrieveCoins(position);
-        }
-        moveMonsters();
     }
 
     public boolean processKey(KeyStroke key) {
@@ -169,14 +178,5 @@ public class Arena {
             default:
                 return true;
         }
-    }
-
-    private boolean verifyMonsterCollisions(Position position) {
-        for (Monster monster : monsters) {
-            if (monster.getPosition().equals(position)) {
-                return true;
-            }
-        }
-        return false;
     }
 }
