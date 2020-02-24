@@ -16,7 +16,7 @@ public class Game {
         try {
             Terminal terminal = new DefaultTerminalFactory().createTerminal();
             screen = new TerminalScreen(terminal);
-            arena = new Arena(11, 11);
+            arena = new Arena(80, 20);
 
             screen.setCursorPosition(null);   // we don't need a cursor
             screen.startScreen();             // screens must be started
@@ -32,10 +32,10 @@ public class Game {
 
     For example, if you don’t want your draw() method to catch and handle any IOException then just throw the exception like this:
 
-     */
+    */
     private void draw() throws IOException {
         screen.clear();
-        arena.draw(screen);
+        arena.draw(screen.newTextGraphics());
         screen.refresh();
     }
 
