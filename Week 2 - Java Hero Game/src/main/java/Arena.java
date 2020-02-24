@@ -3,7 +3,6 @@ import com.googlecode.lanterna.TerminalSize;
 import com.googlecode.lanterna.TextColor;
 import com.googlecode.lanterna.graphics.TextGraphics;
 import com.googlecode.lanterna.input.KeyStroke;
-import com.googlecode.lanterna.input.KeyType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -55,10 +54,12 @@ public class Arena {
     }
 
     private boolean canHeroMove(Position position) {
-        if( 0 <= position.getX() && position.getX() < width && 0 <= position.getY() && position.getY() < height)
-            return true;
-        else
-            return false;
+        for (Wall wall : walls) {
+            if (wall.getPosition().getX() == position.getX() && wall.getPosition().getY() == position.getY()) {
+                return false;
+            }
+        }
+        return true;
     }
 
     private void moveHero(Position position) {
