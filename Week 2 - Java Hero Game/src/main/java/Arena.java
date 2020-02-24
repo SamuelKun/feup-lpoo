@@ -14,6 +14,7 @@ public class Arena {
 
     private List<Wall> walls;
     private List<Coin> coins;
+    private List<Monster> monsters;
 
     Hero hero;
 
@@ -21,9 +22,11 @@ public class Arena {
         this.width = width;
         this.height = height;
 
-        hero = new Hero(10, 10);
         this.walls = createWalls();
         this.coins = createCoins();
+        this.monsters = createMonsters();
+
+        hero = new Hero(10, 10);
     }
 
     private List<Wall> createWalls() {
@@ -59,6 +62,43 @@ public class Arena {
         return coins;
     }
 
+    private List<Monster> createMonsters() {
+        Random random = new Random();
+        ArrayList<Monster> monsters = new ArrayList<>();
+        for (int i = 0; i < 5; i++)
+            monsters.add(new Monster(random.nextInt(width - 2) + 1, random.nextInt(height - 2) + 1));
+        return monsters;
+    }
+
+    private void moveMonsters() {
+        Random rand = new Random();
+        for (Monster monster : monsters) {
+            int move = rand.nextInt(3);
+            switch (move) {
+                case 0:
+                    if(canMonsterMove(monster.moveUp()))
+                        monster.setPosition(monster.moveUp());
+                    break;
+                case 1:
+                    if(canMonsterMove(monster.moveDown()))
+                        monster.setPosition(monster.moveDown());
+                    break;
+                case 2:
+                    if(canMonsterMove(monster.moveLeft()))
+                        monster.setPosition(monster.moveLeft());
+                    break;
+                case 3:
+                    if(canMonsterMove(monster.moveRight()))
+                        monster.setPosition(monster.moveRight());
+                    break;
+                default:
+                    System.out.print("Error: Invalid Monster Movement");
+                    break;
+            }
+
+        }
+    }
+
     public void draw(TextGraphics graphics) {
         graphics.setBackgroundColor(TextColor.Factory.fromString("#B97A57"));
         graphics.fillRectangle(new TerminalPosition(0, 0), new TerminalSize(width, height), ' ');
@@ -69,6 +109,9 @@ public class Arena {
 
         for (Coin coin : coins)
             coin.draw(graphics);
+
+        for (Monster monster : monsters)
+            monster.draw(graphics);
     }
 
     public void setPosition(Position position) {
@@ -84,29 +127,56 @@ public class Arena {
         return true;
     }
 
+    private boolean canMonsterMove(Position position) {
+        for (Wall wall : walls) {
+            if (wall.getPosition().equals(position)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     private void moveHero(Position position) {
         if(canHeroMove(position)) {
             setPosition(position);
             retrieveCoins(position);
         }
+        moveMonsters();
     }
 
     public boolean processKey(KeyStroke key) {
         switch (key.getKeyType()) {
             case ArrowUp:
+                if(verifyMonsterCollisions(hero.getPosition())) return true;
                 moveHero(hero.moveUp());
+                if(verifyMonsterCollisions(hero.getPosition())) return true;
                 return false;
             case ArrowDown:
+                if(verifyMonsterCollisions(hero.getPosition())) return true;
                 moveHero(hero.moveDown());
+                if(verifyMonsterCollisions(hero.getPosition())) return true;
                 return false;
             case ArrowRight:
+                if(verifyMonsterCollisions(hero.getPosition())) return true;
                 moveHero(hero.moveRight());
+                if(verifyMonsterCollisions(hero.getPosition())) return true;
                 return false;
             case ArrowLeft:
+                if(verifyMonsterCollisions(hero.getPosition())) return true;
                 moveHero(hero.moveLeft());
+                if(verifyMonsterCollisions(hero.getPosition())) return true;
                 return false;
             default:
                 return true;
         }
+    }
+
+    private boolean verifyMonsterCollisions(Position position) {
+        for (Monster monster : monsters) {
+            if (monster.getPosition().equals(position)) {
+                return true;
+            }
+        }
+        return false;
     }
 }
