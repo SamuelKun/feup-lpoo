@@ -10,13 +10,13 @@ import java.io.IOException;
 
 public class Game {
     private Screen screen;
-
-    Hero hero = new Hero(10, 10);
+    private Arena arena;
 
     public Game() {
         try {
             Terminal terminal = new DefaultTerminalFactory().createTerminal();
             screen = new TerminalScreen(terminal);
+            arena = new Arena(300, 300);
 
             screen.setCursorPosition(null);   // we don't need a cursor
             screen.startScreen();             // screens must be started
@@ -25,6 +25,7 @@ public class Game {
             e.printStackTrace();
         }
     }
+
     /*
     Dúvida -> Ver quais situações usar um ou outro
     Important: There are several Lanterna methods that throw IOException exceptions. When developing your code, you have to decide if your class should be responsible for handling each particular exception or if it should pass it to the calling method by declaring that it throws that kind of exception. Catching an exception should only be done if your method knows how to handle it properly.
@@ -34,7 +35,7 @@ public class Game {
      */
     private void draw() throws IOException {
         screen.clear();
-        hero.draw(screen);
+        arena.draw(screen);
         screen.refresh();
     }
 
@@ -43,7 +44,7 @@ public class Game {
     }
 
     private void moveHero(Position position) {
-        hero.setPosition(position);
+        arena.setPosition(position);
     }
 
     public void run() throws IOException {
@@ -51,23 +52,9 @@ public class Game {
             draw();
             KeyStroke key = screen.readInput();
             processKey(key);
-            KeyType keyPress = key.getKeyType();
-            switch (keyPress) {
-                case ArrowUp:
-                    moveHero(hero.moveUp());
-                    break;
-                case ArrowDown:
-                    moveHero(hero.moveDown());
-                    break;
-                case ArrowRight:
-                    moveHero(hero.moveRight());
-                    break;
-                case ArrowLeft:
-                    moveHero(hero.moveLeft());
-                    break;
-                default:
-                    screen.close();
-                    return;
+            if(arena.processKey(key)){
+                screen.close();
+                break;
             }
         }
     }
