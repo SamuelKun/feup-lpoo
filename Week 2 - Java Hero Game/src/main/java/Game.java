@@ -42,29 +42,33 @@ public class Game {
         System.out.println(key);
     }
 
+    private void moveHero(Position position) {
+        hero.setPosition(position);
+    }
+
     public void run() throws IOException {
         while(true) {
+            draw();
             KeyStroke key = screen.readInput();
             processKey(key);
-            if (key.getKeyType() == KeyType.ArrowUp) {
-                hero.moveUp();
+            KeyType keyPress = key.getKeyType();
+            switch (keyPress) {
+                case ArrowUp:
+                    moveHero(hero.moveUp());
+                    break;
+                case ArrowDown:
+                    moveHero(hero.moveDown());
+                    break;
+                case ArrowRight:
+                    moveHero(hero.moveRight());
+                    break;
+                case ArrowLeft:
+                    moveHero(hero.moveLeft());
+                    break;
+                default:
+                    screen.close();
+                    return;
             }
-            if (key.getKeyType() == KeyType.ArrowDown) {
-                hero.moveDown();
-            }
-            if (key.getKeyType() == KeyType.ArrowLeft) {
-                hero.moveLeft();
-            }
-            if (key.getKeyType() == KeyType.ArrowRight) {
-                hero.moveRight();
-            }
-            if (key.getKeyType() == KeyType.Character && key.getCharacter() == 'q'){
-                screen.close();
-            }
-            if (key.getKeyType() == KeyType.EOF) {
-                return;
-            }
-            draw();
         }
     }
 }
