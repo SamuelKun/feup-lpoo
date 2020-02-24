@@ -16,7 +16,7 @@ public class Game {
         try {
             Terminal terminal = new DefaultTerminalFactory().createTerminal();
             screen = new TerminalScreen(terminal);
-            arena = new Arena(300, 300);
+            arena = new Arena(11, 11);
 
             screen.setCursorPosition(null);   // we don't need a cursor
             screen.startScreen();             // screens must be started
