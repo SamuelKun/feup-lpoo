@@ -7,7 +7,7 @@ import java.util.List;
 /**
  * An utility class to sort list of numbers.
  */
-public class ListSorter {
+public class ListSorter implements IListSorter {
     private final List<Integer> list;
 
     public ListSorter(List<Integer> list) {
@@ -28,6 +28,7 @@ public class ListSorter {
                 if (sorted.get(i) > sorted.get(j))
                     Collections.swap(sorted, i, j);
 
+        Collections.sort(sorted);
         return sorted;
     }
 }

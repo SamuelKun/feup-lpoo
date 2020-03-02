@@ -65,7 +65,7 @@ public class Arena {
     private List<Monster> createMonsters() {
         Random random = new Random();
         ArrayList<Monster> monsters = new ArrayList<>();
-        for (int i = 0; i < 5; i++)
+        for (int i = 0; i < 30; i++)
             monsters.add(new Monster(random.nextInt(width - 2) + 1, random.nextInt(height - 2) + 1));
         return monsters;
     }
@@ -104,7 +104,7 @@ public class Arena {
     private void moveMonsters() {
         Random rand = new Random();
         for (Monster monster : monsters) {
-            int move = rand.nextInt(3);
+            int move = rand.nextInt(4);
             switch (move) {
                 case 0:
                     if(canMonsterMove(monster.moveUp()))
